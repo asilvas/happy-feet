@@ -8,7 +8,7 @@ Application state management with triggers that span both urgent and non-urgent 
 Sometimes healthy isn't so straight forward. Intermediate states can help fill the `void`.
 
 ```
-const happy = require('happy');
+const happy = require('happy-feet');
 
 // by default, happy.state === happy.STATE.HAPPY
 
@@ -39,7 +39,7 @@ a warning state (a temporary successful state) indicating the eventually need to
 while hard limits trigger a state of immediate urgency.
 
 ```
-const happy = require('happy')({ /* optional options */ });
+const happy = require('happy-feet')({ /* optional options */ });
 
 // happy.state === happy.STATE.HAPPY by default
 
@@ -68,7 +68,7 @@ if (happy.state !== happy.STATE.HAPPY) {
 
 If you've already got an (Connect) API, attach a handler like so:
 ```
-const happyConnect = require('happy/connect');
+const happyConnect = require('happy-feet/connect');
 const handler = happyConnect({ /* options */ }, { /* optional happy options */ });
 
 app.use(handler);
@@ -93,7 +93,7 @@ app.use(handler);
 
 If you've already got an (Express) API, attach a handler like so:
 ```
-const happyExpress = require('happy/express');
+const happyExpress = require('happy-feet/express');
 
 const handler = happyExpress({ /* options */ }, { /* optional happy options */ });
 app.get('/_health', handler);
@@ -116,7 +116,7 @@ app.get('/_health', handler);
 Or if your service does not expose an API, you can use this helper to expose your healthcheck for you.
 
 ```
-const happyApi = require('happy/api');
+const happyApi = require('happy-feet/api');
 
 const handler = happyApi({ /* options */ }, { /* optional happy options */ });
 ```
