@@ -1,0 +1,47 @@
+{
+  "name": "happy-feet",
+  "version": "1.0.0",
+  "description": "Application state management with triggers that span both urgent and non-urgent states to account for more graceful recoveries",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "check-cov": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100 || node scripts/launch-coverage-in-browser",
+    "mocha": "mocha -w -R spec",
+    "report": "istanbul report cobertura && istanbul report lcov",
+    "test": "npm run test-and-check && npm outdated",
+    "test-and-check": "npm run unit && npm run report && npm run check-cov",
+    "unit": "npm run unit-cov",
+    "unit-cov": "istanbul cover --dir coverage-unit ./node_modules/mocha/bin/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asilvas/happy-feet.git"
+  },
+  "keywords": [
+    "health",
+    "health-check",
+    "is-happy",
+    "happy"
+  ],
+  "author": "Aaron Silvas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/asilvas/happy-feet/issues"
+  },
+  "homepage": "https://github.com/asilvas/happy-feet#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.3",
+    "mocha-istanbul": "^0.3.0",
+    "open": "0.0.5",
+    "proxyquire": "^1.8.0",
+    "should": "^13.1.0",
+    "sinon": "^4.0.0",
+    "sinon-chai": "^2.14.0",
+    "sleep-sync": "^2.0.0"
+  }
+}
