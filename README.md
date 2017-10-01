@@ -80,7 +80,7 @@ app.use(handler);
 | method | `string` | `"GET"` | Method required to return health status. |
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
-| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `200` is returned for `HAPPY` state, otherwise `${errorStatus}` for all others.  |
+| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
 | status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
 | happy | `Happy` | n/a | Instance of [Happy](#usage). |
 
@@ -103,7 +103,7 @@ app.get('/_health', handler);
 | --- | --- | --- | --- |
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
-| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `200` is returned for `HAPPY` state, otherwise `${errorStatus}` for all others.  |
+| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
 | status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
 
 | Return Property | Type | Info |
@@ -128,7 +128,7 @@ const handler = happyApi({ /* options */ }, { /* optional happy options */ });
 | method | `string` | `"GET"` | Method required to return health status. |
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
-| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `200` is returned for `HAPPY` state, otherwise `${errorStatus}` for all others.  |
+| status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
 | status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
 
 | Return Property | Type | Info |

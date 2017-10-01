@@ -64,9 +64,9 @@ describe('#Happy', () => {
     opts.uncaughtExceptionSoftLimit = false;
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.uncaughtExceptions++; // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.uncaughtExceptions++; // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
   });
 
