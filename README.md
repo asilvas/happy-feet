@@ -1,6 +1,6 @@
 # Happy Feet
 
-Application state management with triggers that span both urgent and non-urgent states to account for more graceful recoveries.
+Application state management with triggers that span both urgent and non-urgent states to account for more graceful and staggered recoveries.
 
 
 ## State Management
