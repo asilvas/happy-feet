@@ -82,7 +82,6 @@ app.use(handler);
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
 | status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
 | status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
-| happy | `Happy` | n/a | Instance of [Happy](#usage). |
 
 | Return Property | Type | Info |
 | --- | --- | --- |
