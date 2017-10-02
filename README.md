@@ -52,7 +52,7 @@ if (happy.state !== happy.STATE.HAPPY) {
 | --- | --- | --- | --- |
 | escalationSoftLimitMin | `number` | `20` | Minimum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
 | escalationSoftLimitMax | `number` | `300` | Maximum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
-| uncaughtExceptionSoftLimit | `number` | `1` | Number of uncaught exceptions before `WARN` state. Disabled by default. |
+| uncaughtExceptionSoftLimit | `number` | `1` | Number of uncaught exceptions before `WARN` state. |
 | uncaughtExceptionHardLimit | `number` | `undefined` | Number of uncaught exceptions before `UNHAPPY` state. Disabled by default. |
 | rssSoftLimit | `number` | `undefined` | Memory Resident Set Size (in bytes) before `WARN` state. Disabled by default. |
 | rssHardLimit | `number` | `undefined` | Memory Resident Set Size (in bytes) before `UNHAPPY` state. Disabled by default. |
