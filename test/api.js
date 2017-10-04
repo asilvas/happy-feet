@@ -12,7 +12,7 @@ const http = require('http');
 
 describe('#api', () => {
 
-  let instance, opts, happyOpts, req, res, next;
+  let instance, opts, happyOpts, req, next;
 
   beforeEach(() => {
     opts = {
@@ -25,10 +25,6 @@ describe('#api', () => {
     req = {
       method: 'GET',
       url: '/_health'
-    };
-
-    res = {
-      end: sinon.stub()
     };
 
     next = sinon.stub();
@@ -56,7 +52,7 @@ describe('#api', () => {
     expect(instance.happy.state).to.be.equal(instance.happy.STATE.HAPPY);
     http.request(`http://localhost:${opts.port}/_health`, res => {
       expect(res.statusCode).to.be.equal(200);
-      expect(res.statusMessage).to.be.equal(instance.happy.STATE.HAPPY);
+      expect(res.headers['x-happy']).to.be.equal(instance.happy.STATE.HAPPY);
       done();
     }).end();
   });
@@ -67,7 +63,7 @@ describe('#api', () => {
     instance.happy.state = instance.happy.STATE.UNHAPPY;
     http.request(`http://localhost:${opts.port}/_health`, res => {
       expect(res.statusCode).to.be.equal(500);
-      expect(res.statusMessage).to.be.equal(instance.happy.STATE.UNHAPPY);
+      expect(res.headers['x-happy']).to.be.equal(instance.happy.STATE.UNHAPPY);
       done();
     }).end();
   });

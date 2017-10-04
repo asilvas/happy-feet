@@ -81,7 +81,8 @@ app.use(handler);
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
 | status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
-| status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].body | `string` | `${STATE}` | Body message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].contentType | `string` | `text/plan` | Content type to responde with. |
 
 | Return Property | Type | Info |
 | --- | --- | --- |
@@ -103,7 +104,8 @@ app.get('/_health', handler);
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
 | status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
-| status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].body | `string` | `${STATE}` | Body message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].contentType | `string` | `text/plan` | Content type to responde with. |
 
 | Return Property | Type | Info |
 | --- | --- | --- |
@@ -128,7 +130,8 @@ const handler = happyApi({ /* options */ }, { /* optional happy options */ });
 | errorStatus | `number` | `500` | Status code returned if in `UNHAPPY` state. |
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
 | status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
-| status[STATE].statusMessage | `string` | `${STATE}` | Status message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].body | `string` | `${STATE}` | Body message returned for the given state. By default `${STATE}` will be returned verbatim. |
+| status[STATE].contentType | `string` | `text/plan` | Content type to responde with. |
 
 | Return Property | Type | Info |
 | --- | --- | --- |

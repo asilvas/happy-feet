@@ -26,6 +26,7 @@ describe('#connect', () => {
     };
 
     res = {
+      writeHead: sinon.stub(),
       end: sinon.stub()
     };
 
@@ -52,8 +53,10 @@ describe('#connect', () => {
     instance = lib(opts, happyOpts);
     expect(instance.happy.state).to.be.equal(instance.happy.STATE.HAPPY);
     instance(req, res, next);
-    expect(res.statusCode).to.be.equal(200);
-    expect(res.statusMessage).to.be.equal(instance.happy.STATE.HAPPY);
+    expect(res.writeHead).to.be.calledWith(200, {
+      'Content-Type': 'text/plain',
+      'x-happy': instance.happy.STATE.HAPPY
+    });
     expect(res.end).to.have.been.calledOnce;
   });
 
@@ -62,8 +65,10 @@ describe('#connect', () => {
     expect(instance.happy.state).to.be.equal(instance.happy.STATE.HAPPY);
     instance.happy.state = instance.happy.STATE.UNHAPPY;
     instance(req, res, next);
-    expect(res.statusCode).to.be.equal(500);
-    expect(res.statusMessage).to.be.equal(instance.happy.STATE.UNHAPPY);
+    expect(res.writeHead).to.calledWith(500, {
+      'Content-Type': 'text/plain',
+      'x-happy': instance.happy.STATE.UNHAPPY
+    });
     expect(res.end).to.have.been.calledOnce;
   });
 
@@ -71,8 +76,6 @@ describe('#connect', () => {
     instance = lib(opts, happyOpts);
     req.method = 'PUT';
     instance(req, res, next);
-    expect(res.statusCode).to.be.equal(undefined);
-    expect(res.statusMessage).to.be.equal(undefined);
     expect(res.end).to.have.not.been.called;
     expect(next).to.have.been.calledOnce;
   });
@@ -81,8 +84,6 @@ describe('#connect', () => {
     instance = lib(opts, happyOpts);
     req.url = '/some/invalid/path';
     instance(req, res, next);
-    expect(res.statusCode).to.be.equal(undefined);
-    expect(res.statusMessage).to.be.equal(undefined);
     expect(res.end).to.have.not.been.called;
     expect(next).to.have.been.calledOnce;
   });

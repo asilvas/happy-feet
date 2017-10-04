@@ -21,7 +21,9 @@ describe('#express', () => {
     };
 
     res = {
-      end: sinon.stub()
+      status: sinon.stub(),
+      set: sinon.stub(),
+      send: sinon.stub()
     };
   });
 
@@ -45,9 +47,12 @@ describe('#express', () => {
     instance = lib(opts, happyOpts);
     expect(instance.happy.state).to.be.equal(instance.happy.STATE.HAPPY);
     instance({}, res);
-    expect(res.statusCode).to.be.equal(200);
-    expect(res.statusMessage).to.be.equal(instance.happy.STATE.HAPPY);
-    expect(res.end).to.have.been.calledOnce;
+    expect(res.status).to.be.calledWith(200);
+    expect(res.set).to.be.calledWith({
+      'Content-Type': 'text/plain',
+      'x-happy': instance.happy.STATE.HAPPY
+    });
+    expect(res.send).to.have.been.calledOnce;
   });
 
   it('UNHAPPY state', () => {
@@ -55,9 +60,12 @@ describe('#express', () => {
     expect(instance.happy.state).to.be.equal(instance.happy.STATE.HAPPY);
     instance.happy.state = instance.happy.STATE.UNHAPPY;
     instance({}, res);
-    expect(res.statusCode).to.be.equal(500);
-    expect(res.statusMessage).to.be.equal(instance.happy.STATE.UNHAPPY);
-    expect(res.end).to.have.been.calledOnce;
+    expect(res.status).to.be.calledWith(500);
+    expect(res.set).to.be.calledWith({
+      'Content-Type': 'text/plain',
+      'x-happy': instance.happy.STATE.UNHAPPY
+    });
+    expect(res.send).to.have.been.calledOnce;
   });
 
 });
