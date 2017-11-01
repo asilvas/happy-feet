@@ -28,7 +28,7 @@ describe('#Happy', () => {
 
   it('Default options', () => {
     instance = new lib(opts);
-    expect(instance.options).to.be.deep.equal({ escalationSoftLimitMin: 20, escalationSoftLimitMax: 300, uncaughtExceptionSoftLimit: 1 });
+    expect(instance.options).to.be.deep.equal({ escalationSoftLimitMin: 20, escalationSoftLimitMax: 300, uncaughtExceptionSoftLimit: 1, logger: console });
   });
 
   it('Cannot override UNHAPPY state', () => {
@@ -47,6 +47,43 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal('CUSTOM');
   });
   
+  it('updateState logs warning on WARN state change', () => {
+    opts.logger = { warn: sinon.stub(), error: sinon.stub() };
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.updateState(instance.STATE.WARN, 'because');
+    expect(opts.logger.warn).to.be.calledOnce;
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because');
+  });
+  
+  it('updateState logs error on UNHAPPY state change', () => {
+    opts.logger = { warn: sinon.stub(), error: sinon.stub() };
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.updateState(instance.STATE.UNHAPPY, 'because');
+    expect(opts.logger.error).to.be.calledOnce;
+    expect(opts.logger.error).to.be.calledWith('[happy-feet] state changed from HAPPY to UNHAPPY, reason: because');
+  });
+  
+  it('updateState logs warning on CUSTOM state change', () => {
+    opts.logger = { warn: sinon.stub(), error: sinon.stub() };
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.updateState('CUSTOM', 'because');
+    expect(opts.logger.warn).to.be.calledOnce;
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to CUSTOM, reason: because');
+  });
+  
+  it('updateState does not log if state did not change', () => {
+    opts.logger = { warn: sinon.stub(), error: sinon.stub() };
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.updateState(instance.STATE.WARN, 'because');
+    instance.updateState(instance.STATE.WARN, 'because');
+    expect(opts.logger.warn).to.be.calledOnce;
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because');
+  });
+
   it('escalationSoftLimit\'s', done => {
     opts.escalationSoftLimitMin = 1;
     opts.escalationSoftLimitMax = 1;
@@ -74,9 +111,9 @@ describe('#Happy', () => {
     opts.uncaughtExceptionSoftLimit = 2;
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.WARN);
   });
 
@@ -85,9 +122,9 @@ describe('#Happy', () => {
     opts.uncaughtExceptionHardLimit = 2;
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.onUncaughtException(); // emulate trigger since mocha will abort if uncaught exception
+    instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
   });
 
