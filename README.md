@@ -58,6 +58,7 @@ if (happy.state !== happy.STATE.HAPPY) {
 | rssHardLimit | `number` | `undefined` | Memory Resident Set Size (in bytes) before `UNHAPPY` state. Disabled by default. |
 | eventLoopSoftLimit | `number` | `undefined` | Event Loop delay (in ms) before `WARN` state. Disabled by default. Recommended value of `150` or higher. |
 | eventLoopHardLimit | `number` | `undefined` | Event Loop delay (in ms) before `UNHAPPY` state. Disabled by default. Recommended value of `500` or higher. |
+| logger | `{ warn,error }` | `console` | Logging interface to use when state changes occur. Defaults to use `console`. |
 
 | Property | Type | Info |
 | --- | --- | --- |
