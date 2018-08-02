@@ -7,8 +7,8 @@ Application state management with triggers that span both urgent and non-urgent 
 
 Sometimes healthy isn't so straight forward. Intermediate states can help fill the `void`.
 
-```
-const happy = require('happy-feet');
+```js
+const happy = require('happy-feet')();
 
 // by default, happy.state === happy.STATE.HAPPY
 
