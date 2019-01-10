@@ -121,7 +121,7 @@ handler.happy.state = handler.happy.STATE.WARN;
 | status | `object` | `{}` | A collection of custom overrides for status responses based on individual states. |
 | status[STATE].statusCode | `number` | `200|500` | Status code returned for the given state. By default `${errorStatus}` is returned for `UNHAPPY` state, otherwise `200`.  |
 | status[STATE].body | `string` | `${STATE}` | Body message returned for the given state. By default `${STATE}` will be returned verbatim. |
-| status[STATE].contentType | `string` | `text/plain` | Content type to responde with. |
+| status[STATE].contentType | `string` | `text/plain` | Content type to respond with. |
 
 | Return Property | Type | Info |
 | --- | --- | --- |
