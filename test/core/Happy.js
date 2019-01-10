@@ -46,7 +46,7 @@ describe('#Happy', () => {
     instance.state = 'CUSTOM';
     expect(instance.state).to.be.equal('CUSTOM');
   });
-  
+
   it('updateState logs warning on WARN state change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
@@ -55,7 +55,7 @@ describe('#Happy', () => {
     expect(opts.logger.warn).to.be.calledOnce;
     expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because');
   });
-  
+
   it('updateState logs error on UNHAPPY state change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
@@ -64,7 +64,7 @@ describe('#Happy', () => {
     expect(opts.logger.error).to.be.calledOnce;
     expect(opts.logger.error).to.be.calledWith('[happy-feet] state changed from HAPPY to UNHAPPY, reason: because');
   });
-  
+
   it('updateState logs warning on CUSTOM state change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
@@ -73,7 +73,7 @@ describe('#Happy', () => {
     expect(opts.logger.warn).to.be.calledOnce;
     expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to CUSTOM, reason: because');
   });
-  
+
   it('updateState does not log if state did not change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
@@ -128,6 +128,27 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
   });
 
+  it('unhandledRejectionSoftLimit', () => {
+    opts.unhandledRejectionSoftLimit = 2;
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
+    expect(instance.state).to.be.equal(instance.STATE.WARN);
+  });
+
+  it('unhandledRejectionHardLimit', () => {
+    opts.unhandledRejectionSoftLimit = false;
+    opts.unhandledRejectionHardLimit = 2;
+    instance = new lib(opts);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
+    expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+  });
+
   it('rssSoftLimit', () => {
     opts.rssSoftLimit = 2000;
     instance = new lib(opts);
@@ -143,7 +164,7 @@ describe('#Happy', () => {
     process.memoryUsage = sinon.stub().returns({ rss: 3000 });
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
   });
-  
+
   it('eventLoopSoftLimit', done => {
     opts.eventLoopSoftLimit = 100;
     instance = new lib(opts);
