@@ -8,6 +8,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const Happy = require('../lib/core/Happy');
 const lib = require('../lib/connect');
+const rootLib = require('../connect');
 
 describe('#connect', () => {
 
@@ -86,6 +87,10 @@ describe('#connect', () => {
     instance(req, res, next);
     expect(res.end).to.have.not.been.called;
     expect(next).to.have.been.calledOnce;
+  });
+
+  it('Root instance matches lib', () => {
+    expect(lib).to.be.equal(rootLib);
   });
 
 });

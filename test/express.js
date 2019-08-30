@@ -8,6 +8,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const Happy = require('../lib/core/Happy');
 const lib = require('../lib/express');
+const rootLib = require('../express');
 
 describe('#express', () => {
 
@@ -66,6 +67,10 @@ describe('#express', () => {
       'x-happy': instance.happy.STATE.UNHAPPY
     });
     expect(res.send).to.have.been.calledOnce;
+  });
+
+  it('Root instance matches lib', () => {
+    expect(lib).to.be.equal(rootLib);
   });
 
 });

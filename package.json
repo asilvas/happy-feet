@@ -6,11 +6,16 @@
   "directories": {
     "lib": "lib"
   },
+  "files": [
+    "lib/**/*",
+    "express.js",
+    "connect.js"
+  ],
   "scripts": {
     "check-cov": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100 || node scripts/launch-coverage-in-browser",
     "mocha": "mocha -w -R spec",
     "report": "istanbul report cobertura && istanbul report lcov",
-    "test": "npm run test-and-check && npm outdated",
+    "test": "npm run test-and-check",
     "test-and-check": "npm run unit && npm run report && npm run check-cov",
     "unit": "npm run unit-cov",
     "unit-cov": "istanbul cover --dir coverage-unit ./node_modules/mocha/bin/_mocha"
