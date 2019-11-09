@@ -7,7 +7,17 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const lib = require('../../lib/core/Happy');
-const sleepSync = require('sleep-sync');
+
+function sleepSync(ms) {
+  const endTime = Date.now() + ms;
+  do {
+    ; // uggliest sync loop eva
+  } while (Date.now() < endTime);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(() => resolve(), ms));
+}
 
 describe('#Happy', () => {
 
@@ -165,26 +175,24 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
   });
 
-  it('eventLoopSoftLimit', done => {
+  it('eventLoopSoftLimit', async () => {
     opts.eventLoopSoftLimit = 100;
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
     sleepSync(500);
-    setTimeout(() => { // need to release execution back to V8 before the new state is set
-      expect(instance.state).to.be.equal(instance.STATE.WARN);
-      done();
-    }, 0);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    await sleep(0);
+    expect(instance.state).to.be.equal(instance.STATE.WARN);
   });
 
-  it('eventLoopHardLimit', done => {
+  it('eventLoopHardLimit', async () => {
     opts.eventLoopHardLimit = 100;
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
     sleepSync(500);
-    setTimeout(() => { // need to release execution back to V8 before the new state is set
-      expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
-      done();
-    }, 0);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    await sleep(0);
+    expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
   });
 
 });
