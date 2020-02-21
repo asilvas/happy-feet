@@ -96,9 +96,16 @@ A `happy-feet` instance has this interface:
 | Property | Type | Info |
 | --- | --- | --- |
 | state | `string` | Get/set the current state of your process. |
-| updateState(state, reason) | `function` | Calling this does the same thing as setting the `state` property, except it allows you to log a `reason` for the change. |
+| updateState(state, reason, code) | `function` | Calling this does the same thing as setting the `state` property, except it allows you to log a `reason` for the change. The code argument is there to enable identifying the reason for transitions programmatically (see events below). |
 | destroy() | `function` | Use this to free the instance. |
 
+Additionally, each `happy-feet` instance is an `EventEmitter`. It emits a `change` event with the following parameters whenever its state changes:
+
+| Parameter | Type | Info |
+|-----------|------|------|
+| `state`   | `string` | The new state |
+| `reason`  | `string` | The textual description of the change |
+| `code`    | `string` | Can be any value for custom implementations or `manual` if the state was changed through assignment. For automatic transitions can be one of the following: `uncaughtExceptions`, `unhandledRejections`, `memory`, `eventLoop`, or `escalation` |
 
 ## Connect Usage
 

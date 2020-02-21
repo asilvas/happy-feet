@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
@@ -61,37 +60,37 @@ describe('#Happy', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.updateState(instance.STATE.WARN, 'because');
+    instance.updateState(instance.STATE.WARN, 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because');
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because, code: why');
   });
 
   it('updateState logs error on UNHAPPY state change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.updateState(instance.STATE.UNHAPPY, 'because');
+    instance.updateState(instance.STATE.UNHAPPY, 'because', 'why');
     expect(opts.logger.error).to.be.calledOnce;
-    expect(opts.logger.error).to.be.calledWith('[happy-feet] state changed from HAPPY to UNHAPPY, reason: because');
+    expect(opts.logger.error).to.be.calledWith('[happy-feet] state changed from HAPPY to UNHAPPY, reason: because, code: why');
   });
 
   it('updateState logs warning on CUSTOM state change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.updateState('CUSTOM', 'because');
+    instance.updateState('CUSTOM', 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to CUSTOM, reason: because');
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to CUSTOM, reason: because, code: why');
   });
 
   it('updateState does not log if state did not change', () => {
     opts.logger = { warn: sinon.stub(), error: sinon.stub() };
     instance = new lib(opts);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
-    instance.updateState(instance.STATE.WARN, 'because');
-    instance.updateState(instance.STATE.WARN, 'because');
+    instance.updateState(instance.STATE.WARN, 'because', 'why');
+    instance.updateState(instance.STATE.WARN, 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because');
+    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because, code: why');
   });
 
   it('escalationSoftLimit\'s', done => {
@@ -118,81 +117,154 @@ describe('#Happy', () => {
   });
 
   it('uncaughtExceptionSoftLimit', () => {
+    const eventListener = sinon.spy();
     opts.uncaughtExceptionSoftLimit = 2;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    
     instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
     instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.WARN);
+    expect(eventListener).to.be.calledWithMatch(
+      instance.STATE.WARN,
+      sinon.match.string,
+      'uncaughtExceptions');
   });
 
   it('uncaughtExceptionHardLimit', () => {
+    const eventListener = sinon.spy();
     opts.uncaughtExceptionSoftLimit = false;
     opts.uncaughtExceptionHardLimit = 2;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
     instance.onUncaughtException(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'uncaughtExceptions');
   });
 
   it('unhandledRejectionSoftLimit', () => {
+    const eventListener = sinon.spy();
     opts.unhandledRejectionSoftLimit = 2;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+    
     instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.WARN);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.WARN, sinon.match.string, 'unhandledRejections');
   });
 
   it('unhandledRejectionHardLimit', () => {
+    const eventListener = sinon.spy();
     opts.unhandledRejectionSoftLimit = false;
     opts.unhandledRejectionHardLimit = 2;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
     instance.onUnhandledRejection(new Error('error')); // emulate trigger since mocha will abort if uncaught exception
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'unhandledRejections');
   });
 
   it('rssSoftLimit', () => {
+    const eventListener = sinon.spy();
     opts.rssSoftLimit = 2000;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     process.memoryUsage = sinon.stub().returns({ rss: 3000 });
     expect(instance.state).to.be.equal(instance.STATE.WARN);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.WARN, sinon.match.string, 'memory');
   });
 
   it('rssHardLimit', () => {
+    const eventListener = sinon.spy();
     opts.rssHardLimit = 2000;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     process.memoryUsage = sinon.stub().returns({ rss: 3000 });
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'memory');
   });
 
   it('eventLoopSoftLimit', async () => {
+    const eventListener = sinon.spy();
     opts.eventLoopSoftLimit = 100;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     sleepSync(500);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
     await sleep(0);
     expect(instance.state).to.be.equal(instance.STATE.WARN);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.WARN, sinon.match.string, 'eventLoop');
   });
 
   it('eventLoopHardLimit', async () => {
+    const eventListener = sinon.spy();
     opts.eventLoopHardLimit = 100;
     instance = new lib(opts);
+    instance.once('change', eventListener);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
     sleepSync(500);
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
     await sleep(0);
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'eventLoop');
   });
 
+  it('emits state change events upon assignment', done => {
+    const happy = new lib(opts);
+    happy.once('change', verify);
+
+    happy.state = 'CUSTOM';
+
+    function verify(state, reason, code) {
+      expect(state).to.equal('CUSTOM');
+      expect(code).to.equal('manual');
+      done();
+    }
+  });
+
+  it('emits state change events upon calls to updateState', done => {
+    const happy = new lib(opts);
+    happy.once('change', verify);
+
+    happy.updateState('WARN', 'memory limit exceeded', 'mem');
+
+    function verify(state, reason, code) {
+      expect(state).to.equal('WARN');
+      expect(reason).to.equal('memory limit exceeded');
+      expect(code).to.equal('mem');
+      done();
+    }
+  });
 });
