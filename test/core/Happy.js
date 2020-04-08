@@ -241,6 +241,24 @@ describe('#Happy', () => {
     expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'eventLoop');
   });
 
+  it('timeLimitMin/Max', async () => {
+    const eventListener = sinon.spy();
+    opts.timeLimitMin = 1;
+    opts.timeLimitMax = 1;
+    instance = new lib(opts);
+    instance.once('change', eventListener);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
+    sleepSync(500);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+    expect(eventListener).not.to.be.called;
+
+    await sleep(600);
+    expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'timeLimit');
+
+  });
+
   it('emits state change events upon assignment', done => {
     const happy = new lib(opts);
     happy.once('change', verify);
