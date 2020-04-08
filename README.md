@@ -89,6 +89,8 @@ Here's a full list of configuration options for `happy-feet`:
 | rssHardLimit | `number` | `undefined` | Memory Resident Set Size (in bytes) before `UNHAPPY` state. Disabled by default. |
 | eventLoopSoftLimit | `number` | `undefined` | Event Loop delay (in ms) before `WARN` state. Disabled by default. Recommended value of `150` or higher. |
 | eventLoopHardLimit | `number` | `undefined` | Event Loop delay (in ms) before `UNHAPPY` state. Disabled by default. Recommended value of `500` or higher. |
+| timeLimitMin | `number` | `undefined` | Minimum time (in seconds) before `UNHAPPY` state. Disabled by default. Useful for periodic application restarts. Both `timeLimitMin` and `timeLimitMax` must be set to use this feature. |
+| timeLimitMax | `number` | `undefined` | Maximum time (in seconds) before `UNHAPPY` state. Disabled by default. Useful for periodic application restarts. Both `timeLimitMin` and `timeLimitMax` must be set to use this feature. |
 | logger | `{ warn,error }` | `console` | Logging interface to use when state changes occur. Defaults to use `console`. |
 
 A `happy-feet` instance has this interface:
