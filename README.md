@@ -79,8 +79,8 @@ Here's a full list of configuration options for `happy-feet`:
 
 | Option | Type | Default | Info |
 | --- | --- | --- | --- |
-| escalationSoftLimitMin | `number` | `20` | Minimum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
-| escalationSoftLimitMax | `number` | `300` | Maximum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
+| escalationSoftLimitMin | `number` | `60` | Minimum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
+| escalationSoftLimitMax | `number` | `600` | Maximum time (in seconds) before a `WARN` state may be escalated to an `UNHAPPY` state. |
 | uncaughtExceptionSoftLimit | `number` | `1` | Number of uncaught exceptions before `WARN` state. |
 | uncaughtExceptionHardLimit | `number` | `undefined` | Number of uncaught exceptions before `UNHAPPY` state. Disabled by default. |
 | unhandledRejectionSoftLimit | `number` | `undefined` | Number of unhandled rejections before `WARN` state. Disabled by default. |
