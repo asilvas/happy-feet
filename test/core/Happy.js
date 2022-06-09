@@ -24,6 +24,7 @@ describe('#Happy', () => {
 
   beforeEach(() => {
     opts = {
+      gracePeriod: 0
     };
 
     processMemoryUsage = process.memoryUsage;
@@ -37,7 +38,14 @@ describe('#Happy', () => {
 
   it('Default options', () => {
     instance = new lib(opts);
-    expect(instance.options).to.be.deep.equal({ escalationSoftLimitMin: 20, escalationSoftLimitMax: 300, uncaughtExceptionSoftLimit: 1, logger: console });
+    expect(instance.options).to.be.deep.equal({
+      escalationSoftLimitMin: 60,
+      escalationSoftLimitMax: 600,
+      uncaughtExceptionSoftLimit: 1,
+      logger: console,
+      gracePeriod: 0,
+      logOnUnhappy: true
+    });
   });
 
   it('Cannot override UNHAPPY state', () => {
@@ -62,7 +70,7 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
     instance.updateState(instance.STATE.WARN, 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because, code: why');
+    expect(opts.logger.warn).to.be.calledWith("[happy-feet] state changed from 'HAPPY' to 'WARN', reason: 'because', code: why");
   });
 
   it('updateState logs error on UNHAPPY state change', () => {
@@ -71,7 +79,7 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
     instance.updateState(instance.STATE.UNHAPPY, 'because', 'why');
     expect(opts.logger.error).to.be.calledOnce;
-    expect(opts.logger.error).to.be.calledWith('[happy-feet] state changed from HAPPY to UNHAPPY, reason: because, code: why');
+    expect(opts.logger.error).to.be.calledWith("[happy-feet] state changed from 'HAPPY' to 'UNHAPPY', reason: 'because', code: why");
   });
 
   it('updateState logs warning on CUSTOM state change', () => {
@@ -80,7 +88,7 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
     instance.updateState('CUSTOM', 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to CUSTOM, reason: because, code: why');
+    expect(opts.logger.warn).to.be.calledWith("[happy-feet] state changed from 'HAPPY' to 'CUSTOM', reason: 'because', code: why");
   });
 
   it('updateState does not log if state did not change', () => {
@@ -90,7 +98,7 @@ describe('#Happy', () => {
     instance.updateState(instance.STATE.WARN, 'because', 'why');
     instance.updateState(instance.STATE.WARN, 'because', 'why');
     expect(opts.logger.warn).to.be.calledOnce;
-    expect(opts.logger.warn).to.be.calledWith('[happy-feet] state changed from HAPPY to WARN, reason: because, code: why');
+    expect(opts.logger.warn).to.be.calledWith("[happy-feet] state changed from 'HAPPY' to 'WARN', reason: 'because', code: why");
   });
 
   it('escalationSoftLimit\'s', done => {

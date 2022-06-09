@@ -12,13 +12,13 @@
     "connect.js"
   ],
   "scripts": {
-    "check-cov": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100 || node scripts/launch-coverage-in-browser",
+    "check-cov": "nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100 || node scripts/launch-coverage-in-browser",
     "mocha": "mocha -w -R spec",
-    "report": "istanbul report cobertura && istanbul report lcov",
+    "report": "nyc report --reporter=cobertura --reporter=lcov",
     "test": "npm run test-and-check",
     "test-and-check": "npm run unit && npm run report && npm run check-cov",
     "unit": "npm run unit-cov",
-    "unit-cov": "istanbul cover --dir coverage-unit ./node_modules/mocha/bin/_mocha"
+    "unit-cov": "nyc --report-dir coverage-unit --reporter lcov ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -36,16 +36,14 @@
     "url": "https://github.com/asilvas/happy-feet/issues"
   },
   "homepage": "https://github.com/asilvas/happy-feet#readme",
-  "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^7.1.1",
-    "mocha-istanbul": "^0.3.0",
-    "open": "^7.0.3",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "open": "^8.4.0",
     "proxyquire": "^2.1.3",
     "should": "^13.2.3",
-    "sinon": "^9.0.2",
+    "sinon": "^14.0.0",
     "sinon-chai": "^3.5.0"
   }
 }
