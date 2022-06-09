@@ -92,6 +92,8 @@ Here's a full list of configuration options for `happy-feet`:
 | timeLimitMin | `number` | `undefined` | Minimum time (in seconds) before `UNHAPPY` state. Disabled by default. Useful for periodic application restarts. Both `timeLimitMin` and `timeLimitMax` must be set to use this feature. |
 | timeLimitMax | `number` | `undefined` | Maximum time (in seconds) before `UNHAPPY` state. Disabled by default. Useful for periodic application restarts. Both `timeLimitMin` and `timeLimitMax` must be set to use this feature. |
 | logger | `{ warn,error }` | `console` | Logging interface to use when state changes occur. Defaults to use `console`. |
+| gracePeriod | `number` | `300` (5 mins) | The time (in seconds) before any thresholds can trigger an unhealthy state change to alleviate startup pains |
+| logOnUnhappy | `boolean` | `true` | If enabled, all *checks* for state will be logged if NOT `HAPPY` to help troubleshoot state changes |
 
 A `happy-feet` instance has this interface:
 
