@@ -28,7 +28,7 @@ describe('#Happy', () => {
     };
 
     processMemoryUsage = process.memoryUsage;
-    process.memoryUsage = sinon.stub().returns({ rss: 1000 });
+    process.memoryUsage = sinon.stub().returns({ rss: 1000, heapTotal: 1000 });
   });
 
   afterEach(() => {
@@ -213,6 +213,30 @@ describe('#Happy', () => {
     expect(instance.state).to.be.equal(instance.STATE.HAPPY);
 
     process.memoryUsage = sinon.stub().returns({ rss: 3000 });
+    expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'memory');
+  });
+
+  it('heapSoftLimit', () => {
+    const eventListener = sinon.spy();
+    opts.heapSoftLimit = 2000;
+    instance = new lib(opts);
+    instance.once('change', eventListener);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
+    process.memoryUsage = sinon.stub().returns({ heapTotal: 3000 });
+    expect(instance.state).to.be.equal(instance.STATE.WARN);
+    expect(eventListener).to.be.calledWithMatch(instance.STATE.WARN, sinon.match.string, 'memory');
+  });
+
+  it('heapHardLimit', () => {
+    const eventListener = sinon.spy();
+    opts.heapHardLimit = 2000;
+    instance = new lib(opts);
+    instance.once('change', eventListener);
+    expect(instance.state).to.be.equal(instance.STATE.HAPPY);
+
+    process.memoryUsage = sinon.stub().returns({ heapTotal: 3000 });
     expect(instance.state).to.be.equal(instance.STATE.UNHAPPY);
     expect(eventListener).to.be.calledWithMatch(instance.STATE.UNHAPPY, sinon.match.string, 'memory');
   });

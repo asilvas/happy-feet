@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.1.0
+
+* ***ENHANCEMENT*** Support for monitoring total heap usage via `heapSoftLimit` and `heapHardLimit`.
+
+
 ## 2.0.1
 
 * ***FIX*** Do not emit the `change` event more than once for the same event.
