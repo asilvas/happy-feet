@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.1
+
+* ***FIX*** Do not emit the `change` event more than once for the same event.
+
+
 ## 2.0
 
 * ***ENHANCEMENT*** Addition of `gracePeriod` which will prevent state transitions

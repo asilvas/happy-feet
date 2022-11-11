@@ -293,4 +293,22 @@ describe('#Happy', () => {
       done();
     }
   });
+
+  it('does NOT emit state change if state is unchanged', done => {
+    const happy = new lib(opts);
+    let count = 0;
+    happy.on('change', verify);
+
+    happy.updateState('WARN', 'memory limit exceeded', 'mem');
+    happy.updateState('WARN', 'memory limit exceeded', 'mem');
+
+    function verify(state, reason, code) {
+      expect(count).to.equal(0);
+      expect(state).to.equal('WARN');
+      expect(reason).to.equal('memory limit exceeded');
+      expect(code).to.equal('mem');
+      count++;
+      done();
+    }
+  });
 });
