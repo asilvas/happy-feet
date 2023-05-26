@@ -1,5 +1,11 @@
 # CHANGELOG
 
+
+## 2.2.0
+
+* ***ENHANCEMENT*** Add TypeScript declarations
+
+
 ## 2.1.0
 
 * ***ENHANCEMENT*** Support for monitoring total heap usage via `heapSoftLimit` and `heapHardLimit`.
